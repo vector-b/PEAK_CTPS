@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>com.github.vector-b.WorkCard</AssemblyName>
-    <AssemblyTitle>WorkCard</AssemblyTitle>
-    <Version>0.1.0</Version>
+    <AssemblyName>com.github.vector-b.PEAK-CTPS</AssemblyName>
+    <AssemblyTitle>PEAK-CTPS</AssemblyTitle>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

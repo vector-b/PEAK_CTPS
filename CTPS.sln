@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E0D0CD90-FFCA-4D2C-92C8-7DAC7C043797}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkCard", "src\WorkCard\WorkCard.csproj", "{4C8AF057-ACCA-4DF0-AC45-AF7979E0843E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CTPS", "src\CTPS\ctps.csproj", "{4C8AF057-ACCA-4DF0-AC45-AF7979E0843E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

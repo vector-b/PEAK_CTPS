@@ -2,11 +2,12 @@
 using BepInEx.Logging;
 using HarmonyLib;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace WorkCard;
+namespace CTPS;
 
 [BepInAutoPlugin]
 public partial class Plugin : BaseUnityPlugin
@@ -14,13 +15,12 @@ public partial class Plugin : BaseUnityPlugin
     internal static ManualLogSource Log { get; private set; } = null!;
 
     // -------- CAPA 3D --------
-    internal static Texture2D PassportCoverTex;
+    internal static Texture2D PassportCoverTex = null!;
     private const string PassportMaterialName = "M_Passport";
     private static readonly int BaseTexId = Shader.PropertyToID("_BaseTexture");
 
     // -------- ÍCONE HUD --------
-    internal static Texture2D PassportIconTex;
-    // nome da textura original do ícone
+    internal static Texture2D PassportIconTex = null!;
     private const string PassportIconTextureName = "Passport";
 
     private void Awake()
@@ -30,27 +30,22 @@ public partial class Plugin : BaseUnityPlugin
         LoadCoverTexture();
         LoadIconTexture();
 
-        new Harmony("com.github.vector-b.WorkCard").PatchAll();
+        new Harmony("com.github.vector-b.CTPS").PatchAll();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
-        Log.LogInfo("[WorkCard] Plugin carregado!");
+        Log.LogInfo("[CTPS] Plugin carregado!");
     }
 
 
     private void LoadCoverTexture()
     {
-        // BepInEx/plugins/WorkCard/assets/PassportUV_ctps.png
-        string texturePath = Path.Combine(
-            Paths.PluginPath,
-            "WorkCard",
-            "assets",
-            "PassportUV_ctps.png"
-        );
+        string pluginDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string texturePath = Path.Combine(pluginDir, "assets", "PassportUV_ctps.png");
 
         if (!File.Exists(texturePath))
         {
-            Log.LogError("[WorkCard] CTPS cover file not found!");
+            Log.LogError("[CTPS] CTPS cover file not found!");
             return;
         }
 
@@ -59,22 +54,17 @@ public partial class Plugin : BaseUnityPlugin
         ImageConversion.LoadImage(PassportCoverTex, data);
         PassportCoverTex.Apply(true, true);
 
-        Log.LogInfo("[WorkCard] CTPS cover texture loaded.");
+        Log.LogInfo("[CTPS] CTPS cover texture loaded.");
     }
 
     private void LoadIconTexture()
     {
-        // BepInEx/plugins/WorkCard/assets/Passport_Icon.png
-        string iconPath = Path.Combine(
-            Paths.PluginPath,
-            "WorkCard",
-            "assets",
-            "Passport_Icon.png"
-        );
+        string pluginDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string iconPath = Path.Combine(pluginDir, "assets", "Passport_Icon.png");
 
         if (!File.Exists(iconPath))
         {
-            Log.LogWarning("[WorkCard] CTPS icon file not found; HUD will not be changed.");
+            Log.LogWarning("[CTPS] CTPS icon file not found; HUD will not be changed.");
             return;
         }
 
@@ -83,7 +73,7 @@ public partial class Plugin : BaseUnityPlugin
         ImageConversion.LoadImage(PassportIconTex, data);
         PassportIconTex.Apply(true, true);
 
-        Log.LogInfo($"[WorkCard] CTPS icon loaded: {PassportIconTex.width}x{PassportIconTex.height}.");
+        Log.LogInfo($"[CTPS] CTPS icon loaded: {PassportIconTex.width}x{PassportIconTex.height}.");
     }
 
     // ================== M_Passport ==================
@@ -97,7 +87,7 @@ public partial class Plugin : BaseUnityPlugin
 
         if (PassportCoverTex == null)
         {
-            Log.LogWarning("[WorkCard] PassportCoverTex is null, skipping 3D cover.");
+            Log.LogWarning("[CTPS] PassportCoverTex is null, skipping 3D cover.");
             return;
         }
 
@@ -110,29 +100,29 @@ public partial class Plugin : BaseUnityPlugin
             {
                 mat.SetTexture(BaseTexId, PassportCoverTex);
                 _coverAlreadyReplaced = true;
-                Log.LogInfo($"[WorkCard] Applied CTPS to the 3D cover of the material '{mat.name}'.");
+                Log.LogInfo($"[CTPS] Applied CTPS to the 3D cover of the material '{mat.name}'.");
                 break;
             }
         }
     }
 
-    [HarmonyPatch(typeof(RawImage), "set_texture")]
+    [HarmonyPatch(typeof(RawImage), nameof(RawImage.texture), MethodType.Setter)]
     internal static class RawImageSetTexturePatch
     {
-        private static void Prefix(ref Texture __0, RawImage __instance)
+        private static void Prefix(ref Texture value, RawImage __instance)
         {
-            if (PassportIconTex == null || __0 == null)
+            if (PassportIconTex == null || value == null)
                 return;
 
-            if (__0.name != PassportIconTextureName)
+            if (value.name != PassportIconTextureName)
                 return;
 
 
             Plugin.Log.LogInfo(
-                $"[WorkCard] RawImage.set_texture on'{__instance.gameObject.name}' using '{__0.name}' -> changing to CTPS card."
+                $"[CTPS] RawImage.texture on '{__instance.gameObject.name}' using '{value.name}' -> changing to CTPS card."
             );
 
-            __0 = PassportIconTex;
+            value = PassportIconTex;
         }
     }
 }

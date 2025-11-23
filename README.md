@@ -1,31 +1,34 @@
-# WorkCard
+# CTPS (Carteira de Trabalho e Previdência Social)
 
-Describe your project here!
+Mod para PEAK que substitui o passaporte por uma Carteira de Trabalho brasileira (CTPS).
 
-## Template Instructions
+**Replaces the Passport with a Brazilian CTPS Work Permit**
 
-You can remove this section after you've set up your project.
+## Funcionalidades
 
-Next steps:
+- ✅ Substitui a textura 3D do passaporte pela CTPS
+- ✅ Substitui o ícone do HUD pela CTPS
 
-- Create a copy of the `Config.Build.user.props.template` file and name it `Config.Build.user.props`
-  - This will automate copying your plugin assembly to `BepInEx/plugins/`
-  - Configure the paths to point to your game path and your `BepInEx/plugins/`
-  - Game assembly references should work if the path to the game is valid
-- Search `TODO` in the whole project to see what you should configure or modify
+## Instalação
 
-### Thunderstore Packaging
+1. Instale o [BepInEx](https://thunderstore.io/c/peak/p/BepInEx/BepInExPack_PEAK/)
+2. Extraia o mod na pasta `BepInEx/plugins/`
+3. Execute o jogo!
 
-This template comes with Thunderstore packaging built-in, using [TCLI](<https://github.com/thunderstore-io/thunderstore-cli>).
+## Desenvolvimento
 
-You can build Thunderstore packages by running:
+Este mod foi criado usando o [BepInEx Template](https://github.com/Hamunii/BepInEx-Mod-Template).
+
+### Build
+
+```sh
+dotnet build
+```
+
+### Thunderstore Package
 
 ```sh
 dotnet build -c Release -target:PackTS -v d
 ```
 
-> [!NOTE]  
-> You can learn about different build options with `dotnet build --help`.  
-> `-c` is short for `--configuration` and `-v d` is `--verbosity detailed`.
-
-The built package will be found at `artifacts/thunderstore/`.
+O pacote será gerado em `artifacts/thunderstore/`.
